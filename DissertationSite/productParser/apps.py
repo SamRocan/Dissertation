@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class ProductparserConfig(AppConfig):
+class ProductParserConfig(AppConfig):
     name = 'productParser'
