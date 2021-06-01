@@ -1,0 +1,72 @@
+.col1 {
+    color: #504f4f;
+    background-color: #ffc396;
+    padding-left: 30px;
+    padding-top: 50px;
+    padding-bottom:10%;
+}
+.col2{
+
+    /*background-image: url("/static/images/bg-1.jpg");
+    background-size: cover; /* Resize the background image to cover the entire container */
+    background-image: linear-gradient(#96FFC3,#C396FF);
+    padding-bottom: 40%;
+}
+.brand-logo{
+    border-left: 4px solid #cb5d3c;
+    padding-left: 4px;
+}
+.centerObj{
+    color: white;
+    border:2px solid #cb5d3c;
+    background-color: #cb5d3c;
+    padding: 10px 10px;
+    border-radius: 40px;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.centerObj:hover{
+    color: white;
+    text-decoration: none;
+    background-color: #ce7570;
+    border:2px solid #ce7570;
+}
+.left-button{
+    color: white;
+    border:2px solid #cb5d3c;
+    background-color: #cb5d3c;
+    padding: 10px 10px;
+    margin: 0;
+    position: absolute;
+
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 40px;
+}
+.left-button:hover{
+    color: white;
+    text-decoration: none;
+    background-color: #ce7570;
+    border:2px solid #ce7570;
+}
+.nav-item{
+    text-align: center;
+}
+.login-main{
+    /* leave blank, but may add colour later */
+    /*background-color: ;*/
+    border-radius: 4px;
+}
+.login-inner{
+    border-radius: 4px;
+}
+.signUp{
+    background-color: #96FFC3;
+    border-radius: 4px;
+}
+.dropdown-menu{
+    text-align: center;
+}
