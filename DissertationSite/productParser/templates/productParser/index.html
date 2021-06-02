@@ -1,71 +1,22 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Insert Title Here</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="shortcut icon" type="image/jpg" href="{% static 'images/logo.png' %}">
-    <link rel="stylesheet" href="{% static 'css/index_main.css' %}" type="text/css">
-</head>
-<body>
-    <nav class="navbar navbar-expand-md navbar-light bg-light">
-        <a class="navbar-brand" href="#">
-            <img src="{% static 'images/logo.png' %}" width="30" height="30" class="d-inline-block align-top" alt="">
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <l1 class="nav-item">
-                    <a class="nav-link" href="#">Other Tabs Here?</a>
-                </l1>
-            </ul>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle login-main" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Login
-                    </a>
-                    <div class="dropdown-menu p-3">
-                        <form class="form-horizontal" method="post" accept-charset="UTF-8">
-                            <input class="form-control login" type="text" name="username2" placeholder="Username">
-                            <input class="form-control login" type="text" name="password2" placeholder="Password">
-                            <a class="nav-link login-inner" href="#">Log In</a>
-                        </form>
-                    </div>
-                </li>
-                <l1 class="nav-item">
-                    <a class="nav-link signUp" href="register/">Sign Up</a>
-                </l1>
-            </ul>
-        </div>
-
-    </nav>
-    <div class="containter-fluid">
-        <div class="row">
-            <div class="col-md col1">
-                <h3 class="brand-logo">Product Parser</h3>
-                <p style="margin-top: 50px">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ultrices,
-                    nulla ut luctus viverra, urna odio fringilla nunc, vel tristique velit massa sit
-                    amet urna. In vulputate sollicitudin molestie. Nam bibendum dignissim neque,
-                    quis varius neque mattis vitae. Pellentesque pellentesque sed ante sed elementum</p>
-                <p style="padding-bottom: 50px">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ultrices,
-                    nulla ut luctus viverra, urna odio fringilla nunc, vel tristique velit massa sit
-                    amet urna. In vulputate sollicitudin molestie. Nam bibendum dignissim neque,
-                    quis varius neque mattis vitae. Pellentesque pellentesque sed ante sed elementum
-                </p>
-                <a href="#" class="left-button">Find out more</a>
-            </div>
-            <div class="col-md col2">
-                <a href="register/" class="centerObj">Sign Up Now</a>
-            </div>
-        </div>
-
+{% extends "productParser/base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md col1">
+        <h3 class="brand-logo">Product Parser</h3>
+        <p style="margin-top: 50px">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ultrices,
+            nulla ut luctus viverra, urna odio fringilla nunc, vel tristique velit massa sit
+            amet urna. In vulputate sollicitudin molestie. Nam bibendum dignissim neque,
+            quis varius neque mattis vitae. Pellentesque pellentesque sed ante sed elementum</p>
+        <p style="padding-bottom: 50px">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ultrices,
+            nulla ut luctus viverra, urna odio fringilla nunc, vel tristique velit massa sit
+            amet urna. In vulputate sollicitudin molestie. Nam bibendum dignissim neque,
+            quis varius neque mattis vitae. Pellentesque pellentesque sed ante sed elementum
+        </p>
+        <a href="#" class="left-button">Find out more</a>
     </div>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" ></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-</body>
-</html>
+    <div class="col-md col2">
+        <a href="register/" class="centerObj">Sign Up Now</a>
+    </div>
+</div>
+{% endblock content %}
