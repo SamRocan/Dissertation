@@ -1,11 +1,12 @@
 {% extends "productParser/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-<head>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-</head>
-<h1 style="padding: 10px">{{user.username }}</h1>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" ></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<div class="card" style="width: 18rem; margin-left: 60vh;">
+    <img src="{{user.profile.image.url}}" class="card-img-top" alt="">
+    <div class="card-body">
+        <h2 class="account-heading">{{user.username}}</h2>
+        <p class="text-secondary">{{user.email}}</p>
+    </div>
+</div>
+
 {% endblock content %}
