@@ -1,6 +1,6 @@
 .col1 {
-    color: #504f4f;
-    background-color: #ffc396;
+    color: #577359;
+    background-color: #9bc69e;
     padding-left: 30px;
     padding-top: 50px;
     padding-bottom:10%;
@@ -9,13 +9,24 @@
 
     /*background-image: url("/static/images/bg-1.jpg");
     background-size: cover; /* Resize the background image to cover the entire container */
-    background-image: linear-gradient(#96FFC3,#C396FF);
+    background-image: linear-gradient(#9eb7e2,#ffffff);
     padding-bottom: 40%;
 }
-.brand-logo{
-    border-left: 4px solid #cb5d3c;
-    padding-left: 4px;
+.col1 p{
+    margin-left: 5%;
+    margin-right: 10%;
 }
+.brand-logo{
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    font-size: 50px; font-style: normal;
+    font-variant: normal;
+    font-weight: bold;
+    margin-top: 10%;
+    margin-left: 5%;
+    margin-right: 10%;
+
+}
+
 .centerObj{
     color: white;
     border:2px solid #cb5d3c;
@@ -36,12 +47,11 @@
 }
 .left-button{
     color: white;
-    border:2px solid #cb5d3c;
-    background-color: #cb5d3c;
+    border:2px solid #577359;
+    background-color: #577359;
     padding: 10px 10px;
     margin: 0;
     position: absolute;
-
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 40px;
@@ -49,8 +59,8 @@
 .left-button:hover{
     color: white;
     text-decoration: none;
-    background-color: #ce7570;
-    border:2px solid #ce7570;
+    background-color: #324332;
+    border:2px solid #324332;
 }
 .nav-item{
     text-align: center;
@@ -67,6 +77,51 @@
     background-color: #96FFC3;
     border-radius: 4px;
 }
-.dropdown-menu{
-    text-align: center;
+
+
+/* Navbar */
+
+.example{
+    margin: 0;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Style the search field */
+form.example input[type=text] {
+    padding: 10px;
+    font-size: 17px;
+    border: 1px solid grey;
+    float: left;
+    width: 80%;
+    background: #f1f1f1;
+    outline: none;
+}
+
+/* Style the submit button */
+form.example button {
+    float: left;
+    width: 20%;
+    padding: 10px;
+    background: #f1f1f1;
+    font-size: 17px;
+    border: 1px solid grey;
+    border-left: none; /* Prevent double borders */
+    cursor: pointer;
+    color: #386fe3;
+}
+
+form.example button:hover {
+    background: #386fe3;
+    color: #f1f1f1;
+}
+
+
+/* Clear floats */
+form.example::after {
+    content: "";
+    clear: both;
+    display: table;
 }
