@@ -26,25 +26,6 @@
     margin-right: 10%;
 
 }
-
-.centerObj{
-    color: white;
-    border:2px solid #cb5d3c;
-    background-color: #cb5d3c;
-    padding: 10px 10px;
-    border-radius: 40px;
-    margin: 0;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-.centerObj:hover{
-    color: white;
-    text-decoration: none;
-    background-color: #ce7570;
-    border:2px solid #ce7570;
-}
 .left-button{
     color: white;
     border:2px solid #577359;
@@ -81,7 +62,7 @@
 
 /* Navbar */
 
-.example{
+.ph_search{
     margin: 0;
     position: absolute;
     left: 50%;
@@ -90,7 +71,7 @@
 }
 
 /* Style the search field */
-form.example input[type=text] {
+form.ph_search input[type=text] {
     padding: 10px;
     font-size: 17px;
     border: 1px solid grey;
@@ -101,7 +82,7 @@ form.example input[type=text] {
 }
 
 /* Style the submit button */
-form.example button {
+form.ph_search button {
     float: left;
     width: 20%;
     padding: 10px;
@@ -113,14 +94,14 @@ form.example button {
     color: #386fe3;
 }
 
-form.example button:hover {
+form.ph_search button:hover {
     background: #386fe3;
     color: #f1f1f1;
 }
 
 
 /* Clear floats */
-form.example::after {
+form.ph_search::after {
     content: "";
     clear: both;
     display: table;
