@@ -1,0 +1,11 @@
+{% extends "productParser/base.html" %}
+{% block content %}
+<div>
+    <h1>Result</h1>
+    <ol>
+        {% for item1, item2 in zipList %}
+        <li><a href="{{item2}}">{{item1}}</a></li>
+        {% endfor %}
+    </ol>
+</div>
+{% endblock content %}
