@@ -1,20 +1,15 @@
 {% extends "productParser/base.html" %}
 {% block content %}
+</div>
 <div class="row">
-    <div id="loader-bg">
-        <div id="loader"></div>
-    </div>
     <div class="col-lg col1">
         <h1 class="brand-logo">Find your next  investment today</h1>
         <p style="margin-top: 50px; padding-bottom: 50px">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ultrices,
             nulla ut luctus viverra, urna odio fringilla nunc, vel tristique velit massa sit
             amet urna. In vulputate sollicitudin molestie. Nam bibendum dignissim neque,
             quis varius neque mattis vitae. Pellentesque pellentesque sed ante sed elementum</p>
-
         <a href="#" onclick="load()" class="left-button">Find out more</a>
-    </div>
-    <div class="spinner-border text-primary" role="status" id="loading" style="display: none">
-        <span class="sr-only">Loading...</span>
+        <div id="circle"></div>
     </div>
     <div class="col-lg col2">
         <!-- The form -->
@@ -22,14 +17,7 @@
             <input type="text" placeholder="Search.." name="search-area">
             <button type="submit" onclick="load()" id="subButton"><i class="fa fa-search"></i></button>
         </form>
-
     </div>
 </div>
-<script>
-    //For loading screen
-    function load() {
-        var v = document.getElementById("loader-bg");
-        v.style.zIndex = "100"
-    }
-</script>
+
 {% endblock content %}
