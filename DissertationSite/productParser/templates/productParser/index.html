@@ -10,6 +10,7 @@
             quis varius neque mattis vitae. Pellentesque pellentesque sed ante sed elementum</p>
         <a href="#" onclick="load()" class="left-button">Find out more</a>
         <div id="circle"></div>
+        <div id="loader"></div>
     </div>
     <div class="col-lg col2">
         <!-- The form -->
@@ -19,5 +20,10 @@
         </form>
     </div>
 </div>
+<script>
+    function load(){
+        document.getElementById('loader').id ='loading';
+    }
+</script>
 
 {% endblock content %}
