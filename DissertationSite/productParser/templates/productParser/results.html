@@ -1,6 +1,9 @@
 {% extends "productParser/base.html" %}
-{% block content %}
 {% load static %}
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'css/results_style.css' %}" type="text/css">
+{% endblock %}
+{% block content %}
 <div>
     <h1 id="results-title">Results</h1>
     <ul class="resultsList">
