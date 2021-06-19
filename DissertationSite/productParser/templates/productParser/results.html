@@ -1,11 +1,17 @@
 {% extends "productParser/base.html" %}
 {% block content %}
+{% load static %}
 <div>
-    <h1>Result</h1>
-    <ol>
+    <h1 id="results-title">Results</h1>
+    <ul class="resultsList">
         {% for item1, item2 in zipList %}
-        <li><a href="{{item2}}">{{item1}}</a></li>
+        <li class="resultsList">
+            <a href="{{item2}}" class="product-cell">
+                <img src="{% static 'images/logo.png' %}" class="profile-image" width="50" height="50">
+                <h3>{{item1}}</h3>
+            </a>
+        </li>
         {% endfor %}
-    </ol>
+    </ul>
 </div>
 {% endblock content %}
