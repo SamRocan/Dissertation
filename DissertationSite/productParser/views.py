@@ -26,6 +26,7 @@ def send(request):
             entry =  entry[:len(entry)-3]
         return entry
 
+    pages = int(request.GET['page-no'])/10
     search = stringFixer(request.GET['search-area'])
     siteLink = 'https://www.producthunt.com/search/posts?q='+search
 
@@ -41,7 +42,7 @@ def send(request):
         driver.maximize_window()
         last_height = driver.execute_script("return document.body.scrollHeight")
         count=0
-        while count<10:
+        while count<pages:
             print("I"*count)
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             time.sleep(SCROLL_PAUSE_TIME)

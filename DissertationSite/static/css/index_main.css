@@ -142,10 +142,10 @@ form.ph_search::after {
     z-index: 2;
 
 }
-
+/* May want to add back in if there are errors
 #loading:before{
     animation-delay: .5s;
-}
+}*/
 @keyframes loading {
     0%{
         transform: scale(0);
