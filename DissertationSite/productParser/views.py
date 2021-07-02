@@ -1,7 +1,8 @@
+import requests
 from django.shortcuts import render
 from django.http import HttpResponse
-
 from django.shortcuts import render
+import json
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
@@ -54,7 +55,7 @@ def send(request):
     finally:
 
         soup = BeautifulSoup(driver.page_source, "html.parser")
-        linkList = []
+        slugList = []
         titleList = []
         for c in soup("a"):
             z = str(c)
@@ -62,7 +63,7 @@ def send(request):
                 start = z.find("href")
                 end = z.find(">") - 1
                 print("http://producthunt.com"+(z[start+6:end]))
-                linkList.append("http://producthunt.com"+(z[start+6:end]))
+                slugList.append((z[start+13:end]))
         #removes ad
         for c in soup("h3"):
             titleList.append(c.getText())
@@ -71,5 +72,111 @@ def send(request):
         #maybe look at a more elegent way of removing advert links
         titleList.pop(3)
 
-    zipList = zip(titleList, linkList)
+    zipList = zip(titleList, slugList)
     return render(request, 'productParser/results.html', {'zipList':zipList})
+
+def product(request, product):
+    API_URL = "https://api.producthunt.com/v2/api/graphql"
+
+    # Specify your API token
+    MY_API_TOKEN = "PbEz8mWhaMzYy1J8WwS-X2-YXi92xhRffQS3YDi3xl4"
+    slug = product
+
+    # Specify your query
+
+    query = {"query":
+                 """
+                 query FindBySlug {
+                 post(slug:"""+ "\""+ slug +"\"" + """){
+                    commentsCount
+                    comments(first:5){
+                        edges{
+                            node{
+                                body
+                            }
+                        }
+                    }
+                    createdAt
+                    description
+                    featuredAt
+                    id
+                    isCollected
+                    isVoted
+                    makers{
+                        name
+                        username
+                    }
+                    media{
+                        url
+                    }
+                    name
+                    productLinks{
+                        url
+                    }
+                    reviewsRating
+                    slug
+                    tagline
+                    thumbnail{
+                        url
+                    }
+                    topics(first:5){
+                        edges{
+                            node{
+                                name
+                            }
+                        }
+                    }
+                    votesCount
+                    website
+                }
+            }
+        """}
+
+    headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + MY_API_TOKEN,
+        'Host': 'api.producthunt.com'
+    }
+    posts = requests.post(API_URL,
+                          headers=headers,
+                          data=json.dumps(query))
+
+    jsonInfo = posts.json()
+    results = {}
+    topics =[]
+    for i in jsonInfo['data']['post']:
+        if(i=='makers'):
+            print("Makers")
+            for y in jsonInfo['data']['post']['makers']:
+                print(str(y['username']) + ": " + str(y['name']))
+        if(i=='media'):
+            print("Media")
+            for y in jsonInfo['data']['post']['media']:
+                print(y['url'])
+        if(i=='productLinks'):
+            print("Product Links")
+            for y in jsonInfo['data']['post']['productLinks']:
+                print(y['url'])
+        if(i=='thumbnail'):
+            print("Thumbnail")
+            logo = str(jsonInfo['data']['post'][i]['url'])
+        if(i=='topics'):
+            print("Topics")
+            for y in jsonInfo['data']['post']['topics']['edges']:
+                topics.append(y['node']['name'])
+        results[i] = str(jsonInfo['data']['post'][i])
+    print(results.get('tagline'))
+
+
+
+    product_name = slug.capitalize()
+
+    context = {
+        'results':results,
+        'product_name':product_name,
+        'topics':topics,
+        'logo':logo
+    }
+    return render(request, 'productParser/product.html', {"context":context})
+    #return HttpResponse("LOADED PAGE %s" % product)
