@@ -1,7 +1,39 @@
+/* CSS Just for the button */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Merriweather Sans", sans-serif;
+    background-color: #dfe4ea;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+/* POP UP */
+.btn {
+    padding: 15px 50px;
+    font-size: 16px;
+    text-decoration: none;
+    background-color: #316ebf;
+    color: #fff;
+    transition: 0.2s all;
+    box-shadow: 9px 10px 38px -18px rgba(0, 0, 0, 1);
+    cursor: pointer;
+    border-radius: 5px;
+}
+.btn:hover {
+    background-color: #1e90ff;
+    transform: scale(1.05);
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
 
 /* CSS for Modal Box */
 .modal {
-    display: none;
+    display: block;
     position: fixed;
     top: 0;
     left: 0;
@@ -55,12 +87,10 @@ button{
     display: block;
     margin-left: auto;
     margin-right: auto;
-    max-height: 120px;
-    max-width: 100%;
-    height: auto;
-    width: auto\9; /* ie8 */
-    margin-top: 40px;
-    margin-bottom: 20px;
+    height: 120px;
+    width: 120px;
+    margin-top: 20px;
+    margin-bottom: 10px;
     border-radius: 50%;
 }
 .logo-sm{
@@ -68,10 +98,8 @@ button{
     display: none;
     margin-left: auto;
     margin-right: auto;
-    max-height: 120px;
-    max-width: 100%;
-    height: auto;
-    width: auto\9; /* ie8 */
+    height: 120px;
+    width: 120px;
     margin-top: 20px;
     margin-bottom: 10px;
     border-radius: 50%;
@@ -129,8 +157,15 @@ ul li{
     text-align: center;
 }
 .information-found{
+    overflow-wrap: break-word;
+    word-wrap: break-word;
     border-radius: 5px;
     background-color: #e3e4e6;
+
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
 }
 .information-found h3{
     color: black;

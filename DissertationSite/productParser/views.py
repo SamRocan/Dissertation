@@ -174,7 +174,6 @@ def product(request, product):
 
     context = {
         'results':results,
-        'product_name':product_name,
         'topics':topics,
         'logo':logo
     }
