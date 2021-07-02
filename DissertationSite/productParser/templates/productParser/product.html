@@ -1,78 +1,86 @@
 {% extends "productParser/base.html" %}
 {% load static %}
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/product_style.css' %}" type="text/css">
+<link rel="stylesheet" href="{% static 'css/product_style2.css' %}" type="text/css">
 {% endblock extra_css %}
 {% block content %}
-<div class="container-fluid" id="outer">
-    <div class="row no-gutters">
-        <div class="order-2 col-md-3 order-md-1" id="left-col">
-            <div class="container-fluid p-0" id="left">
-                <img src="{{context.logo}}" class="logo">
-                <div id="news-collum">
-                    <h5 style="font-weight: bold;text-align: center">Product News</h5>
-                    <hr>
-                    <ul>
-                        <li>
-                            news article 1 about the product that is written so its quite long
-                        </li>
-                        <li>
-                            news article 2 about the product
-                        </li>
-                        <li>
-                            news article 3
-                        </li>
-                        <li>
-                            news article 4
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="order-1 col-md-9 order-md-2">
-            <img src="{{context.logo}}" class="logo-sm">
-            <h1 style="text-align: center; padding-top: 10px">{{results.name}}</h1>
-            <p style="text-align: center">{{ context.results.tagline}}</p>
-            <div class="container-fluid" id="right">
-                <div class="row no-gutters">
-                    <div class="col-lg-4"><button id="b1">Product Information</button></div>
-                    <div class="col-lg-4"><button id="b2">Founder Information</button></div>
-                    <div class="col-lg-4"><button id="b3">Market Information</button></div>
-                </div>
-                <div class="row no-gutters" style="margin: 10px">
-                    <div id="1">
-                        <div class="container-fluid information-found">
-                            <h3>Information Found</h3>
-                            <p>
-                                {{context.results.description}}
-                            </p>
+<div class="modal">
+    <!-- modal content -->
+    <div class="modal-content">
+        <div class="container-fluid" id="outer">
+            <div class="row no-gutters">
+                <div class="order-2 col-md-3 order-md-1" id="left-col">
+                    <div class="container-fluid p-0" id="left">
+                        <img src="{{context.logo}}" class="logo">
+                        <div id="news-collum">
+                            <h5 style="font-weight: bold;text-align: center">Product News</h5>
+                            <hr>
                             <ul>
-                                {% for i in context.topics %}
-                                <li>{{i}}</li>
-                                {% endfor %}
+                                <li>
+                                    news article 1 about the product that is written so its quite long
+                                </li>
+                                <li>
+                                    news article 2 about the product
+                                </li>
+                                <li>
+                                    news article 3
+                                </li>
+                                <li>
+                                    news article 4
+                                </li>
                             </ul>
                         </div>
                     </div>
-                    <div id="2" style="display:none;">
-                        <h1 class="content-header">Founder</h1>
-                        <p>
-                            a person's regular occupation, profession, or trade.
-                            "experts who typically conduct their business over the internet"
-                            a person's regular occupation, profession, or trade.
-                            "experts who typically conduct their business over the internet"
-                        </p>
-                    </div>
+                </div>
+                <div class="order-1 col-md-9 order-md-2">
+                    <span onclick="window.location.href='{{request.META.HTTP_REFERER|escape}}';" class="close">&times;</span>
+                    <img src="{{context.logo}}" class="logo-sm">
+                    <h1 style="text-align: center; padding-top: 10px">{{results.name}}</h1>
+                    <p style="text-align: center">{{ context.results.tagline}}</p>
+                    <div class="container-fluid" id="right">
+                        <div class="row no-gutters">
+                            <div class="col-lg-4"><button id="b1">Product Information</button></div>
+                            <div class="col-lg-4"><button id="b2">Founder Information</button></div>
+                            <div class="col-lg-4"><button id="b3">Market Information</button></div>
+                        </div>
+                        <div class="row-lg no-gutters" style="margin: 10px">
+                            <div id="1">
+                                <div class="container information-found">
+                                    <h3>Information Found</h3>
+                                    <p>{{context.results.description}}</p>
+                                    <ul>
+                                        {% for i in context.topics %}
+                                        <li>{{i}}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            <div id="2" style="display:none;">
+                                <div class="container information-found">
+                                    <h3 class="content-header">Founder</h3>
+                                    <p>
+                                        a person's regular occupation, profession, or trade.
+                                        "experts who typically conduct their business over the internet"
+                                        a person's regular occupation, profession, or trade.
+                                        "experts who typically conduct their business over the internet"
+                                    </p>
+                                </div>
+                            </div>
 
-                    <div id="3" style="display:none;">
-                        <h1 class="content-header">Market</h1>
-                        <p>
-                            a regular gathering of people for the purchase and sale of provisions, livestock, and other commodities.
-                            "they wanted to browse around the street market"
-                        </p>
-                        <p>
-                            an area or arena in which commercial dealings are conducted.
-                            "the UK market remained in recession"
-                        </p>
+                            <div id="3" style="display:none;">
+                                <div class="container information-found">
+                                    <h3 class="content-header">Market</h3>
+                                    <p>
+                                        a regular gathering of people for the purchase and sale of provisions, livestock, and other commodities.
+                                        "they wanted to browse around the street market"
+                                    </p>
+                                    <p>
+                                        an area or arena in which commercial dealings are conducted.
+                                        "the UK market remained in recession"
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
