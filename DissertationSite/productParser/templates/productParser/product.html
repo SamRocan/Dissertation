@@ -35,7 +35,7 @@
                 <div class="order-1 col-md-9 order-md-2">
                     <span onclick="window.location.href='{{request.META.HTTP_REFERER|escape}}';" class="close">&times;</span>
                     <img src="{{context.logo}}" class="logo-sm">
-                    <h1 style="text-align: center; padding-top: 10px">{{results.name}}</h1>
+                    <h1 style="text-align: center; padding-top: 10px">{{context.results.name}}</h1>
                     <p style="text-align: center">{{ context.results.tagline}}</p>
                     <div class="container-fluid" id="right">
                         <div class="row no-gutters">
