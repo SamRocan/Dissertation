@@ -64,9 +64,12 @@
                                         a person's regular occupation, profession, or trade.
                                         "experts who typically conduct their business over the internet"
                                     </p>
+                                    <button id="get-analysis">Get 5 factor scores</button>
+                                    <br>
+                                    <div id="5-factor-analysis"></div>
+                                    <br>
                                 </div>
                             </div>
-
                             <div id="3" style="display:none;">
                                 <div class="container information-found">
                                     <h3 class="content-header">Market</h3>
@@ -90,7 +93,7 @@
 {% endblock content %}
 {% block extra_js %}
 <script>
-
+    /*Change tabs*/
     $('#b1').on('click',function(){
         //If 1 is showing, show 2, hide all other divs
         $('#1').show().siblings('div').hide();
@@ -126,5 +129,6 @@
         $('#right').css("background-color", "#c0dbb9")
 
     });
+
 </script>
 {% endblock extra_js %}

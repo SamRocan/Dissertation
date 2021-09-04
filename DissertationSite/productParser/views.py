@@ -1,13 +1,21 @@
 import requests
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.views.generic import View, TemplateView
 from django.shortcuts import render
+from django.conf import settings
+import snscrape.modules.twitter as sntwitter
 import json
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
+import pandas as pd
 import time
+import re
+import os
+
+
 
 def index(request):
     return render(request, 'productParser/index.html')
@@ -75,12 +83,12 @@ def send(request):
     zipList = zip(titleList, slugList)
     return render(request, 'productParser/results.html', {'zipList':zipList})
 
-def product(request, product):
+def product(request, productName):
     API_URL = "https://api.producthunt.com/v2/api/graphql"
 
     # Specify your API token
     MY_API_TOKEN = "PbEz8mWhaMzYy1J8WwS-X2-YXi92xhRffQS3YDi3xl4"
-    slug = product
+    slug = productName
 
     # Specify your query
 
@@ -145,6 +153,7 @@ def product(request, product):
     jsonInfo = posts.json()
     results = {}
     topics =[]
+    print("Running")
     for i in jsonInfo['data']['post']:
         if(i=='makers'):
             print("Makers")
