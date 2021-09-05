@@ -100,7 +100,7 @@
             type: 'GET',
             url:`/posts-requested/`,
             success: function (response){
-                const text = response.context.text
+                const founderName = response.context.founderName
 
                 const extVar = response.context.extScore
                 const neuVar = response.context.neuScore
@@ -115,7 +115,7 @@
                 const opnCat = response.context.opn
                 //Do += to add a new one each time
                 JSCont.innerHTML = `<div class="card p-3 mt-3 mb-3">
-                                    <h1>${text}</h1>
+                                    <h1>${founderName}</h1>
                                     <p>${extVar}   ${extCat}</p>
                                     <p>${neuVar}   ${neuCat}</p>
                                     <p>${agrVar}   ${agrCat}</p>

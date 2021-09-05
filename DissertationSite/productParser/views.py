@@ -15,7 +15,8 @@ import time
 import re
 import os
 
-
+Names = []
+TwitterHandles = []
 
 def index(request):
     return render(request, 'productParser/index.html')
@@ -113,6 +114,7 @@ def product(request, productName):
                     makers{
                         name
                         username
+                        twitterUsername
                     }
                     media{
                         url
@@ -158,6 +160,9 @@ def product(request, productName):
         if(i=='makers'):
             print("Makers")
             for y in jsonInfo['data']['post']['makers']:
+                TwitterHandles.append(y['twitterUsername'])
+                Names.append(y['name'])
+                print(y['twitterUsername'])
                 print(str(y['username']) + ": " + str(y['name']))
         if(i=='media'):
             print("Media")
@@ -181,6 +186,7 @@ def product(request, productName):
 
     product_name = slug.capitalize()
 
+    print("Twitter Handle is " + str(TwitterHandles))
     context = {
         'results':results,
         'topics':topics,
@@ -489,8 +495,8 @@ class JSView(View):
         data = LIWCAnalysis.getExcel(self, all_users)
         score_data = LIWCAnalysis.getExcel(self, user_scores)
 
-        print("Getting Tweets")
-        twitterContent = LIWCAnalysis.getTweets(self, "jack")
+        print("Getting Tweets for " + str(TwitterHandles[0]))
+        twitterContent = LIWCAnalysis.getTweets(self, TwitterHandles[0])
         print("Getting Tweets took ", time.time() - start_time, " to run")
 
 
@@ -533,7 +539,7 @@ class JSView(View):
         opn = str(catVar[4])
 
         print("My program took ", time.time() - start_time, " to run")
-        text = "Tweet"
+
 
         context = {
             #'scoresVar':scoresVar,
@@ -548,7 +554,7 @@ class JSView(View):
             'agr':agr,
             'con':con,
             'opn':opn,
-            'text':text
+            'founderName':Names[0]
         }
 
         return JsonResponse({'context':context}, safe=False)
