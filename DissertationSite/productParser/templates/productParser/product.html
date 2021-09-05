@@ -93,6 +93,41 @@
 {% endblock content %}
 {% block extra_js %}
 <script>
+    JSBut = document.getElementById('get-analysis')
+    JSCont = document.getElementById('5-factor-analysis')
+    const doJSON = () => {
+        $.ajax({
+            type: 'GET',
+            url:`/posts-requested/`,
+            success: function (response){
+                const text = response.context.text
+
+                const extVar = response.context.extScore
+                const neuVar = response.context.neuScore
+                const agrVar = response.context.agrScore
+                const conVar = response.context.conScore
+                const opnVar = response.context.opnScore
+
+                const extCat = response.context.ext
+                const neuCat = response.context.neu
+                const agrCat = response.context.agr
+                const conCat = response.context.con
+                const opnCat = response.context.opn
+                //Do += to add a new one each time
+                JSCont.innerHTML = `<div class="card p-3 mt-3 mb-3">
+                                    <h1>${text}</h1>
+                                    <p>${extVar}   ${extCat}</p>
+                                    <p>${neuVar}   ${neuCat}</p>
+                                    <p>${agrVar}   ${agrCat}</p>
+                                    <p>${conVar}   ${conCat}</p>
+                                    <p>${opnVar}   ${opnCat}</p>
+                                </div>`
+            }
+        })
+    }
+    JSBut.addEventListener('click', ()=> {
+        doJSON()
+    })
     /*Change tabs*/
     $('#b1').on('click',function(){
         //If 1 is showing, show 2, hide all other divs
