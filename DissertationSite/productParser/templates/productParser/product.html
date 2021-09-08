@@ -58,16 +58,35 @@
                             <div id="2" style="display:none;">
                                 <div class="container information-found">
                                     <h3 class="content-header">Founder</h3>
-                                    <p>
-                                        a person's regular occupation, profession, or trade.
-                                        "experts who typically conduct their business over the internet"
-                                        a person's regular occupation, profession, or trade.
-                                        "experts who typically conduct their business over the internet"
-                                    </p>
+                                    <hr>
+                                    <ul class="product-items">
+                                        {% for w,x,y,z in context.socialMediaZip %}
+                                            {% if x == None %}
+                                            <li>
+                                                <div class="row founder-bar">
+                                                    <div class="col-md founder-item"> <a href="https://www.producthunt.com/@{{y}}"><img src="{% static 'images/ProductHunt-Logo.png' %}" class = "flogo"></a><a href="#"><img src="{% static 'images/Twitter-Logo.png' %}" class = "flogo"></a></div>
+                                                    <div class="col-md founder-item"> <img src="{{z}}" width="90" height="90"> </div>
+                                                    <div class="col-md founder-item"> {{w}}</div>
+                                                </div>
+                                            </li>
+                                            {% endif %}
+
+                                            {% if x != None %}
+                                            <li>
+                                                <div class="row founder-bar">
+                                                    <div class="col-md founder-item"><a href="https://www.producthunt.com/@{{y}}"><img src="{% static 'images/ProductHunt-Logo.png' %}" class = "flogo"></a><a href="http://twitter.com/{{x}}"><img src="{% static 'images/Twitter-Logo.png' %}" class = "flogo"></a></div>
+                                                    <div class="col-md founder-item"><img src="{{z}}" width="90" height="90"></div>
+                                                    <div class="col-md founder-item">{{w}}</div>
+                                                </div>
+                                            </li>
+                                            {% endif %}
+                                    </ul>
                                     <button id="get-analysis">Get 5 factor scores</button>
                                     <br>
                                     <div id="5-factor-analysis"></div>
                                     <br>
+                                        {% endfor %}
+
                                 </div>
                             </div>
                             <div id="3" style="display:none;">

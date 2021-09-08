@@ -18,6 +18,7 @@ import os
 Names = []
 TwitterHandles = []
 
+
 def index(request):
     return render(request, 'productParser/index.html')
 
@@ -115,6 +116,7 @@ def product(request, productName):
                         name
                         username
                         twitterUsername
+                        profileImage                        
                     }
                     media{
                         url
@@ -155,6 +157,12 @@ def product(request, productName):
     jsonInfo = posts.json()
     results = {}
     topics =[]
+    global Names
+    Names = []
+    global TwitterHandles
+    TwitterHandles = []
+    phUrls = []
+    profilePics = []
     print("Running")
     for i in jsonInfo['data']['post']:
         if(i=='makers'):
@@ -162,8 +170,10 @@ def product(request, productName):
             for y in jsonInfo['data']['post']['makers']:
                 TwitterHandles.append(y['twitterUsername'])
                 Names.append(y['name'])
+                phUrls.append(y['username'])
+                profilePics.append(y['profileImage'])
                 print(y['twitterUsername'])
-                print(str(y['username']) + ": " + str(y['name']))
+                print(str(y['twitterUsername']) + ": " + str(y['name']))
         if(i=='media'):
             print("Media")
             for y in jsonInfo['data']['post']['media']:
@@ -182,15 +192,19 @@ def product(request, productName):
         results[i] = str(jsonInfo['data']['post'][i])
     print(results.get('tagline'))
 
-
+    socialMediaZip = zip(Names,TwitterHandles, phUrls, profilePics)
 
     product_name = slug.capitalize()
 
     print("Twitter Handle is " + str(TwitterHandles))
+    print("Names are : " + str(Names))
     context = {
         'results':results,
         'topics':topics,
-        'logo':logo
+        'logo':logo,
+        'names':Names,
+        'socialMediaZip':socialMediaZip,
+        'twitterHandles':TwitterHandles,
     }
     return render(request, 'productParser/product.html', {"context":context})
     #return HttpResponse("LOADED PAGE %s" % product)
@@ -483,6 +497,8 @@ class LIWCAnalysis:
     }
 
 class JSView(View):
+    global Names
+    global TwitterHandles
     def get(self, *args, **kwargs):
         #media_url = settings.MEDIA_URL
         #users = media_url + "combined_users.xlsx"
@@ -494,7 +510,8 @@ class JSView(View):
 
         data = LIWCAnalysis.getExcel(self, all_users)
         score_data = LIWCAnalysis.getExcel(self, user_scores)
-
+        print(Names)
+        print(TwitterHandles)
         print("Getting Tweets for " + str(TwitterHandles[0]))
         twitterContent = LIWCAnalysis.getTweets(self, TwitterHandles[0])
         print("Getting Tweets took ", time.time() - start_time, " to run")
