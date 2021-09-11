@@ -238,8 +238,8 @@ def product(request, productName):
         'socialMediaZip':socialMediaZip,
         'twitterHandles':TwitterHandles,
     }
+
     return render(request, 'productParser/product.html', {"context":context})
-    #return HttpResponse("LOADED PAGE %s" % product)
 
 def analysis(request, userName, self=None):
     userName = userName
@@ -283,26 +283,35 @@ def analysis(request, userName, self=None):
 
     scoresVar = scores[0]
     catVar = scores[1]
-
-
-    print("My program took ", time.time() - start_time, " to run")
-    extScore = "Extraversion: " + str(scoresVar[0])
-    neuScore = "Neuroticism: " + str(scoresVar[1])
-    agrScore = "Agreableness: " + str(scoresVar[2])
-    conScore = "Concientiousness: " + str(scoresVar[3])
-    opnScore = "Openness: " + str(scoresVar[4])
-    ext = str(catVar[0])
-    neu = str(catVar[1])
-    agr = str(catVar[2])
-    con = str(catVar[3])
-    opn = str(catVar[4])
+    fiveFactors = ["Extraversion", "Neuroticism", "Agreableness", "Concientiousness", "Openness"]
 
     print("My program took ", time.time() - start_time, " to run")
+    extScore = scoresVar[0]
+    neuScore = scoresVar[1]
+    agrScore = scoresVar[2]
+    conScore = scoresVar[3]
+    opnScore = scoresVar[4]
+    ext = "Extraversion (" + str(catVar[0]) + ")"
+    neu = "Neuroticism (" + str(catVar[1]) + ")"
+    agr = "Agreableness (" + str(catVar[2]) + ")"
+    con = "Concientiousness (" + str(catVar[3]) + ")"
+    opn = "Openness (" + str(catVar[4]) + ")"
 
+    print("My program took ", time.time() - start_time, " to run")
+
+    fiveFactorData = {
+        'fiveFactors': fiveFactors,
+        'scores': scoresVar,
+        'cats': catVar,
+        'founderName':userName
+    }
+
+    jsonData = dumps(fiveFactorData)
 
     context = {
         #'scoresVar':scoresVar,
         #'catVar':catVar,
+        'data':jsonData,
         'extScore':extScore,
         'neuScore':neuScore,
         'agrScore':agrScore,
@@ -315,10 +324,7 @@ def analysis(request, userName, self=None):
         'opn':opn,
         'founderName':userName
     }
-    """
-    context = {
-        'userName':userName
-    }"""
+
     return render(request, 'productParser/analysis.html', context)
 
 
@@ -536,7 +542,7 @@ class LIWCAnalysis:
         user = xlx.loc[userNo-sub,:]
         for i in range(1,11):
             if(i<6):
-                scores.append(str(user[i]))
+                scores.append(user[i])
             else:
                 categories.append(str(user[i]))
 
@@ -544,8 +550,6 @@ class LIWCAnalysis:
         retList.append(categories)
         return retList
 
-    # Running with handle @bigmommaprods:   1281s
-    # Running with handle @_visionex:       1074s
     LIWC = {
         1:0,
         2:0,

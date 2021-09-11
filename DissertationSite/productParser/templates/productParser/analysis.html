@@ -1,18 +1,69 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h3>Welcome {{userName}}</h3>
-<p> you are here</p>
-<ul>
+{% extends "productParser/base.html" %}
+{% load static %}
+{% block content %}
+<h3 style="text-align: center">{{founderName}}</h3>
+<div>
+    <canvas id="myChartBar"></canvas>
+</div>
+<hr>
+<ul style="text-align: center; list-style-type: none">
     <li>{{ext}} : {{extScore}}</li>
     <li>{{neu}} : {{neuScore}}</li>
     <li>{{agr}} : {{agrScore}}</li>
     <li>{{con}} : {{conScore}}</li>
     <li>{{opn}} : {{opnScore}}</li>
 </ul>
-</body>
-</html>
+{% endblock content %}
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script>
+    var data = JSON.parse("{{data|escapejs}}");
+
+    drawBarGraph(data, 'myChartBar');
+
+    function drawBarGraph(data, id) {
+        var labels = data.fiveFactors;
+        var chartLabel = data.founderName;
+        var chartData = data.scores;
+        console.log(chartLabel)
+        console.log(chartData)
+        console.log(labels)
+        var ctx = document.getElementById(id).getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: chartLabel,
+                    data: chartData,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    }
+</script>
+{% endblock extra_js %}
+

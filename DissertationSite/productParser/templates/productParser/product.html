@@ -149,8 +149,6 @@
 
     });
     var data = JSON.parse("{{context.data|escapejs}}");
-
-    console.log(data.statLabels)
     drawBarGraph(data, 'myChartBar');
     drawLineGraph(data, 'myChartLine');
     drawPieGraph(data, 'myChartPie');
@@ -305,6 +303,9 @@
       var chartLabel = data.chartLabel;
       var chartData = data.chartData;
       var ctx = document.getElementById(id).getContext('2d');
+      console.log(chartLabel)
+      console.log(chartData)
+      console.log(labels)
       var myChart = new Chart(ctx, {
           type: 'pie',
           data: {
