@@ -10,25 +10,15 @@ body {
     justify-content: center;
     align-items: center;
 }
-/* POP UP */
-.btn {
-    padding: 15px 50px;
-    font-size: 16px;
-    text-decoration: none;
-    background-color: #316ebf;
-    color: #fff;
-    transition: 0.2s all;
-    box-shadow: 9px 10px 38px -18px rgba(0, 0, 0, 1);
-    cursor: pointer;
-    border-radius: 5px;
-}
-.btn:hover {
-    background-color: #1e90ff;
-    transform: scale(1.05);
-}
 
-.btn:active {
-    transform: scale(0.98);
+.btn{
+    margin-top: 20px;
+    margin-left: 30px;
+    margin-right: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* CSS for Modal Box */
@@ -115,8 +105,7 @@ hr{
 }
 ul{
     text-align: left;
-    list-style: square;
-    font-weight: bold;
+    list-style: none;
     padding-right: 15px;
     line-height: 110%;
 }
@@ -155,11 +144,14 @@ ul li{
 
 .content-header{
     text-align: center;
-    list-style-type: none;
+    list-style: none;
 }
 .product-items{
-    list-style-type: none;
+    list-style: none;
     align-items: center;
+}
+.product-items ul{
+    list-style: none;
 }
 .information-found{
     overflow-wrap: break-word;
@@ -183,6 +175,7 @@ ul li{
     align-items: center;
     justify-content: center;
 }
+
 .founder-item{
     text-align: center;
     margin-right: 30px;

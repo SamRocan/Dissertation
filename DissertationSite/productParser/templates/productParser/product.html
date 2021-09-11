@@ -57,14 +57,14 @@
                             </div>
                             <div id="2" style="display:none;">
                                 <div class="container information-found">
-                                    <h3 class="content-header">Founder</h3>
-                                    <hr>
+                                    <h3 class="content-header">Founders</h3>
                                     <ul class="product-items">
                                         {% for w,x,y,z in context.socialMediaZip %}
+                                        <hr>
                                             {% if x == None %}
-                                            <li>
+                                            <li style="list-style: none">
                                                 <div class="row founder-bar">
-                                                    <div class="col-md founder-item"> <a href="https://www.producthunt.com/@{{y}}"><img src="{% static 'images/ProductHunt-Logo.png' %}" class = "flogo"></a><a href="#"><img src="{% static 'images/Twitter-Logo.png' %}" class = "flogo"></a></div>
+                                                    <div class="col-md founder-item"> <a href="https://www.producthunt.com/@{{y}}"><img src="{% static 'images/ProductHunt-Logo.png' %}" class = "flogo"></a><a href="#" id="noTwit"><img src="{% static 'images/Twitter-Logo.png' %}" class = "flogo"></a></div>
                                                     <div class="col-md founder-item"> <img src="{{z}}" width="90" height="90"> </div>
                                                     <div class="col-md founder-item"> {{w}}</div>
                                                 </div>
@@ -72,7 +72,7 @@
                                             {% endif %}
 
                                             {% if x != None %}
-                                            <li>
+                                            <li style="list-style: none">
                                                 <div class="row founder-bar">
                                                     <div class="col-md founder-item"><a href="https://www.producthunt.com/@{{y}}"><img src="{% static 'images/ProductHunt-Logo.png' %}" class = "flogo"></a><a href="http://twitter.com/{{x}}"><img src="{% static 'images/Twitter-Logo.png' %}" class = "flogo"></a></div>
                                                     <div class="col-md founder-item"><img src="{{z}}" width="90" height="90"></div>
@@ -80,13 +80,10 @@
                                                 </div>
                                             </li>
                                             {% endif %}
-                                    </ul>
-                                    <button id="get-analysis">Get 5 factor scores</button>
-                                    <br>
-                                    <div id="5-factor-analysis"></div>
-                                    <br>
-                                        {% endfor %}
 
+                                    <a href="/analysis/{{x}}" target="_blank" class="btn btn-outline-primary btn-sm"> Get 5 factor scores</a>
+                                        {% endfor %}
+                                    </ul>
                                 </div>
                             </div>
                             <div id="3" style="display:none;">
@@ -112,42 +109,7 @@
 {% endblock content %}
 {% block extra_js %}
 <script>
-    JSBut = document.getElementById('get-analysis')
-    JSCont = document.getElementById('5-factor-analysis')
-    const doJSON = () => {
-        $.ajax({
-            type: 'GET',
-            url:`/posts-requested/`,
-            success: function (response){
-                const founderName = response.context.founderName
-
-                const extVar = response.context.extScore
-                const neuVar = response.context.neuScore
-                const agrVar = response.context.agrScore
-                const conVar = response.context.conScore
-                const opnVar = response.context.opnScore
-
-                const extCat = response.context.ext
-                const neuCat = response.context.neu
-                const agrCat = response.context.agr
-                const conCat = response.context.con
-                const opnCat = response.context.opn
-                //Do += to add a new one each time
-                JSCont.innerHTML = `<div class="card p-3 mt-3 mb-3">
-                                    <h1>${founderName}</h1>
-                                    <p>${extVar}   ${extCat}</p>
-                                    <p>${neuVar}   ${neuCat}</p>
-                                    <p>${agrVar}   ${agrCat}</p>
-                                    <p>${conVar}   ${conCat}</p>
-                                    <p>${opnVar}   ${opnCat}</p>
-                                </div>`
-            }
-        })
-    }
-    JSBut.addEventListener('click', ()=> {
-        doJSON()
-    })
-    /*Change tabs*/
+        /*Change tabs*/
     $('#b1').on('click',function(){
         //If 1 is showing, show 2, hide all other divs
         $('#1').show().siblings('div').hide();

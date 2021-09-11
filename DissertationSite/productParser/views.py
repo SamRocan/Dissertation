@@ -209,7 +209,88 @@ def product(request, productName):
     return render(request, 'productParser/product.html', {"context":context})
     #return HttpResponse("LOADED PAGE %s" % product)
 
+def analysis(request, userName, self=None):
+    userName = userName
+
+    module_dir = os.path.dirname('media/')
+    all_users = os.path.join(module_dir, 'combined_users.xlsx')
+    user_scores = os.path.join(module_dir, 'user_scores.xlsx')
+    liwc_dic = os.path.join(module_dir, 'LIWC2007_Ammended.dic')
+    start_time = time.time()
+
+    data = LIWCAnalysis.getExcel(self, all_users)
+    score_data = LIWCAnalysis.getExcel(self, user_scores)
+    print(userName)
+    print("Getting Tweets for " + str(userName))
+    twitterContent = LIWCAnalysis.getTweets(self, userName)
+    print("Getting Tweets took ", time.time() - start_time, " to run")
+
+
+    print("Tokenizing Tweets")
+    tokenizedTweets = LIWCAnalysis.tokenize(self, twitterContent)
+    print(tokenizedTweets)
+    print("Tokenizing Tweets took ", time.time() - start_time, " to run")
+
+    print("turning to dictionary")
+    dictionary = LIWCAnalysis.dic_to_dict(self, liwc_dic)
+    print("Dictionary took ", time.time() - start_time, " to run")
+
+    print("Categorizing tokens")
+    values = LIWCAnalysis.match_regex_to_text(self, tokenizedTweets[0], dictionary)
+    print("Categorizing tokens took ", time.time() - start_time, " to run")
+
+    print("Getting Best Match")
+    match = LIWCAnalysis.bestMatch(self, data, values)
+    print("Best Match took ", time.time() - start_time, " to run")
+
+    profile = list(match.keys())[0]
+    print("Getting Scores")
+    scores = LIWCAnalysis.getScore(self, score_data, profile)
+    print("Scores took ", time.time() - start_time, " to run")
+
+    scoresVar = scores[0]
+    catVar = scores[1]
+
+
+    print("My program took ", time.time() - start_time, " to run")
+    extScore = "Extraversion: " + str(scoresVar[0])
+    neuScore = "Neuroticism: " + str(scoresVar[1])
+    agrScore = "Agreableness: " + str(scoresVar[2])
+    conScore = "Concientiousness: " + str(scoresVar[3])
+    opnScore = "Openness: " + str(scoresVar[4])
+    ext = str(catVar[0])
+    neu = str(catVar[1])
+    agr = str(catVar[2])
+    con = str(catVar[3])
+    opn = str(catVar[4])
+
+    print("My program took ", time.time() - start_time, " to run")
+
+
+    context = {
+        #'scoresVar':scoresVar,
+        #'catVar':catVar,
+        'extScore':extScore,
+        'neuScore':neuScore,
+        'agrScore':agrScore,
+        'conScore':conScore,
+        'opnScore':opnScore,
+        'ext':ext,
+        'neu':neu,
+        'agr':agr,
+        'con':con,
+        'opn':opn,
+        'founderName':userName
+    }
+    """
+    context = {
+        'userName':userName
+    }"""
+    return render(request, 'productParser/analysis.html', context)
+
+
 class LIWCAnalysis:
+
     def getExcel(self, filename):
         # 0 means sheet zero
         exFile = pd.read_excel(filename,0)
@@ -268,7 +349,6 @@ class LIWCAnalysis:
 
     def bestMatch(self, xlx, user):
         mainUserData = user
-
         users = {}
         # 1) Create dict of all users initialize to 0
         for i in range(1, 241):
@@ -320,7 +400,7 @@ class LIWCAnalysis:
                     if num != "" and i.isdecimal() == False:
                         numList.append(int(num))
                         num = ""
-                    print(str(line) + " " + str(count))
+                    #print(str(line) + " " + str(count))
                 exportDict[word] = numList
         return exportDict
 
@@ -372,7 +452,7 @@ class LIWCAnalysis:
         twitterContent = ""
         #Puts tweets into list
         for i,tweet in enumerate(sntwitter.TwitterSearchScraper('from:'+username).get_items()): #declare a username
-            if i>1000: #number of tweets you want to scrape
+            if i>10: #number of tweets you want to scrape
                 break
             tweets_list.append([tweet.date, tweet.id, tweet.content]) #declare the attributes to be returned
 
@@ -388,6 +468,7 @@ class LIWCAnalysis:
         words = []
         prices = []
         for i in splitwords:
+            print(i)
             if(len(i)>0):
                 if(i[0]=='@'):
                     mentions.append(i)
