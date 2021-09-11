@@ -14,6 +14,8 @@ import pandas as pd
 import time
 import re
 import os
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 Names = []
 TwitterHandles = []
@@ -211,7 +213,8 @@ def product(request, productName):
 
 def analysis(request, userName, self=None):
     userName = userName
-
+    if(userName == "None"):
+        return render(request, 'productParser/noTwitter.html')
     module_dir = os.path.dirname('media/')
     all_users = os.path.join(module_dir, 'combined_users.xlsx')
     user_scores = os.path.join(module_dir, 'user_scores.xlsx')
@@ -288,6 +291,8 @@ def analysis(request, userName, self=None):
     }"""
     return render(request, 'productParser/analysis.html', context)
 
+def noTwitter(request):
+    return render(request, 'productParser/noTwitter.html')
 
 class LIWCAnalysis:
 
@@ -577,82 +582,4 @@ class LIWCAnalysis:
         464:0,
     }
 
-class JSView(View):
-    global Names
-    global TwitterHandles
-    def get(self, *args, **kwargs):
-        #media_url = settings.MEDIA_URL
-        #users = media_url + "combined_users.xlsx"
-        module_dir = os.path.dirname('media/')
-        all_users = os.path.join(module_dir, 'combined_users.xlsx')
-        user_scores = os.path.join(module_dir, 'user_scores.xlsx')
-        liwc_dic = os.path.join(module_dir, 'LIWC2007_Ammended.dic')
-        start_time = time.time()
 
-        data = LIWCAnalysis.getExcel(self, all_users)
-        score_data = LIWCAnalysis.getExcel(self, user_scores)
-        print(Names)
-        print(TwitterHandles)
-        print("Getting Tweets for " + str(TwitterHandles[0]))
-        twitterContent = LIWCAnalysis.getTweets(self, TwitterHandles[0])
-        print("Getting Tweets took ", time.time() - start_time, " to run")
-
-
-        print("Tokenizing Tweets")
-        tokenizedTweets = LIWCAnalysis.tokenize(self, twitterContent)
-        print(tokenizedTweets)
-        print("Tokenizing Tweets took ", time.time() - start_time, " to run")
-
-        print("turning to dictionary")
-        dictionary = LIWCAnalysis.dic_to_dict(self, liwc_dic)
-        print("Dictionary took ", time.time() - start_time, " to run")
-
-        print("Categorizing tokens")
-        values = LIWCAnalysis.match_regex_to_text(self, tokenizedTweets[0], dictionary)
-        print("Categorizing tokens took ", time.time() - start_time, " to run")
-
-        print("Getting Best Match")
-        match = LIWCAnalysis.bestMatch(self, data, values)
-        print("Best Match took ", time.time() - start_time, " to run")
-
-        profile = list(match.keys())[0]
-        print("Getting Scores")
-        scores = LIWCAnalysis.getScore(self, score_data, profile)
-        print("Scores took ", time.time() - start_time, " to run")
-
-        scoresVar = scores[0]
-        catVar = scores[1]
-
-
-        print("My program took ", time.time() - start_time, " to run")
-        extScore = "Extraversion: " + str(scoresVar[0])
-        neuScore = "Neuroticism: " + str(scoresVar[1])
-        agrScore = "Agreableness: " + str(scoresVar[2])
-        conScore = "Concientiousness: " + str(scoresVar[3])
-        opnScore = "Openness: " + str(scoresVar[4])
-        ext = str(catVar[0])
-        neu = str(catVar[1])
-        agr = str(catVar[2])
-        con = str(catVar[3])
-        opn = str(catVar[4])
-
-        print("My program took ", time.time() - start_time, " to run")
-
-
-        context = {
-            #'scoresVar':scoresVar,
-            #'catVar':catVar,
-            'extScore':extScore,
-            'neuScore':neuScore,
-            'agrScore':agrScore,
-            'conScore':conScore,
-            'opnScore':opnScore,
-            'ext':ext,
-            'neu':neu,
-            'agr':agr,
-            'con':con,
-            'opn':opn,
-            'founderName':Names[0]
-        }
-
-        return JsonResponse({'context':context}, safe=False)
