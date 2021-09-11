@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.conf import settings
 import snscrape.modules.twitter as sntwitter
 import json
+from json import dumps
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
@@ -14,8 +15,7 @@ import pandas as pd
 import time
 import re
 import os
-from rest_framework.views import APIView
-from rest_framework.response import Response
+
 
 Names = []
 TwitterHandles = []
@@ -88,6 +88,9 @@ def send(request):
     return render(request, 'productParser/results.html', {'zipList':zipList})
 
 def product(request, productName):
+
+
+
     API_URL = "https://api.producthunt.com/v2/api/graphql"
 
     # Specify your API token
@@ -200,7 +203,34 @@ def product(request, productName):
 
     print("Twitter Handle is " + str(TwitterHandles))
     print("Names are : " + str(Names))
+
+    ####################
+
+    searchStat = StatistaSearcher()
+    if(topics[0] == "Productivity"):
+        statRes = searchStat.searchStatista(topics[1])
+    else:
+        statRes = searchStat.searchStatista(topics[0])
+    getLinks = searchStat.getLinks(statRes)
+    print(getLinks)
+
+    statGraph = StatistaGraph(getLinks[0])
+
+    graphInfo = statGraph.getInfo()
+    chartLabel = graphInfo[0]
+    statLabels = graphInfo[1]
+    statLabels.reverse()
+    chartData = graphInfo[2]
+    chartData.reverse()
+    statData ={
+        "labels":statLabels,
+        "chartLabel":chartLabel,
+        "chartData":chartData,
+    }
+    jsonData = dumps(statData)
+
     context = {
+        'data':jsonData,
         'results':results,
         'topics':topics,
         'logo':logo,
@@ -290,6 +320,7 @@ def analysis(request, userName, self=None):
         'userName':userName
     }"""
     return render(request, 'productParser/analysis.html', context)
+
 
 def noTwitter(request):
     return render(request, 'productParser/noTwitter.html')
@@ -582,4 +613,92 @@ class LIWCAnalysis:
         464:0,
     }
 
+class StatistaGraph:
+    def __init__(self, url):
+        self.link = "https://www.statista.com" + url
+        self.soup = BeautifulSoup(requests.get(self.link).content, 'html.parser')
+
+        self.thd = self.soup.select('#statTableHTML th')
+        self.tds = self.soup.select('#statTableHTML td')
+        self.heading = self.soup.find("h2", {"class":"sectionHeadline"})
+        self.title = self.heading.text.strip()
+        #print(self.thd)
+        #print(self.tds)
+        self.cols = []
+        self.data = []
+        self.intData = []
+
+        for i in self.tds:
+            i = str(i.text).replace(",","")
+            test = i.replace('.', '',1)
+            if(i.isdigit()==False and test.isdigit()==False and i!="-"):
+                self.cols.append(i)
+            elif(i!="-"):
+                self.data.append(i)
+
+        for nums in range(len(self.data)):
+            retNum = ""
+            for i in self.data[nums]:
+                if(i.isdigit() or i=="."):
+                    retNum +=i
+            if(retNum!="-" and retNum!="."):
+                self.intData.append(float(retNum))
+
+        if(len(self.cols)== 0):
+            hold = []
+            for i in range(1900,2100):
+                if(float(i) in self.intData):
+                    hold.append(i)
+            if(len(hold)>2):
+                for i in hold:
+                    self.cols.append(i)
+                    self.intData.remove(i)
+
+    def getInfo(self):
+        retList = []
+        retList.append(self.title)
+        retList.append(self.cols)
+        retList.append(self.intData)
+        return retList
+
+class StatistaSearcher:
+
+    def searchStatista(self, query):
+        #query = str(input("Enter query: "))
+        url = 'https://www.statista.com/search/?q='+query+'&Search=&qKat=search'
+        soup = BeautifulSoup(requests.get(url).content, 'html.parser')
+        linkList = soup.find_all("li")
+        return linkList
+
+    def soupToLink(self, resultSetList):
+        links = []
+        for i in resultSetList:
+            loc1 = str(i).find("href")
+            loc2 = str(i).find("title")
+            links.append(str(i)[loc1+6:loc2-2])
+        return links
+
+    def getLinks(self, linkList):
+        premiumStatisticLinks = []
+        basicStatisticLinks = []
+        topicLinks = []
+
+        for i in range(len(linkList)):
+            if("searchContentTypeStatistic" in str(linkList[i])):
+                if("iconSprite--statisticPremium" in str(linkList[i])):
+                    element = linkList[i].find_all('a', href=True)
+                    premiumStatisticLinks.append(element)
+                if("iconSprite--statisticBasis" in str(linkList[i])):
+                    element = linkList[i].find_all('a', href=True)
+                    basicStatisticLinks.append(element)
+            if("searchContentTypeTopic" in str(linkList[i])):
+                if("iconSprite--topic" in str(linkList[i])):
+                    element = linkList[i].find_all('a', href=True)
+                    topicLinks.append(element)
+
+        basicStatPage = self.soupToLink(basicStatisticLinks)
+        premiumStatPage = self.soupToLink(premiumStatisticLinks)
+        topicPage = self.soupToLink(topicLinks)
+
+        return(basicStatPage)
 

@@ -9,4 +9,6 @@ urlpatterns = [
     path('product/<slug:productName>/', views.product, name="product"),
     path('product/None', views.noTwitter, name="noTwitter"),
     path('analysis/<userName>/', views.analysis, name="analysis"),
+    path('api/', views.product, name="apiView"),
+
 ]
