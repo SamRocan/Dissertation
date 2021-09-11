@@ -16,18 +16,11 @@
                             <h5 style="font-weight: bold;text-align: center">Product News</h5>
                             <hr>
                             <ul>
+                                {% for link,article in context.newsZip %}
                                 <li>
-                                    news article 1 about the product that is written so its quite long
+                                    <a href="{{link}}">{{article}}</a>
                                 </li>
-                                <li>
-                                    news article 2 about the product
-                                </li>
-                                <li>
-                                    news article 3
-                                </li>
-                                <li>
-                                    news article 4
-                                </li>
+                                {% endfor %}
                             </ul>
                         </div>
                     </div>

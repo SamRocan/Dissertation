@@ -205,7 +205,32 @@ def product(request, productName):
     print("Names are : " + str(Names))
 
     ####################
+    #Get News
+    newsHeadlines = []
+    newsLink = []
+    url = "https://bing-news-search1.p.rapidapi.com/news/search"
 
+    newsQuery = str(topics[0])
+    querystring = {"q":newsQuery,"safeSearch":"Off","textFormat":"Raw","freshness":"Day"}
+
+    headers = {
+        'x-bingapis-sdk': "true",
+        'x-rapidapi-host': "bing-news-search1.p.rapidapi.com",
+        'x-rapidapi-key': "cc31406e1cmshee5b3ea7ab27afbp1895d6jsnc029cbf06f88"
+    }
+
+    response = requests.request("GET", url, headers=headers, params=querystring)
+    response.raise_for_status()
+    response_data = response.json()
+    newsCount = 0
+    for i in response_data['value']:
+        if newsCount<5:
+            newsHeadlines.append(i['name'])
+            newsLink.append(i['url'])
+            newsCount+=1
+
+    newsZip = zip(newsLink,newsHeadlines)
+    ####################
     searchStat = StatistaSearcher()
     if(topics[0] == "Productivity"):
         statRes = searchStat.searchStatista(topics[1])
@@ -236,6 +261,7 @@ def product(request, productName):
         'logo':logo,
         'names':Names,
         'socialMediaZip':socialMediaZip,
+        'newsZip':newsZip,
         'twitterHandles':TwitterHandles,
     }
 
