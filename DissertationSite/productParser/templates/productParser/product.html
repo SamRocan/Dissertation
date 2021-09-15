@@ -13,12 +13,12 @@
                     <div class="container-fluid p-0" id="left">
                         <img src="{{context.logo}}" class="logo">
                         <div id="news-collum">
-                            <h5 style="font-weight: bold;text-align: center">Product News</h5>
+                            <h5 style="font-weight: bold;text-align: center">Industry News</h5>
                             <hr>
                             <ul>
                                 {% for link,article in context.newsZip %}
                                 <li>
-                                    <a href="{{link}}">{{article}}</a>
+                                    <a href="{{link}}" class="news_link" style="color: black; font-weight: 550; text-decoration: none;">{{article}}</a>
                                 </li>
                                 {% endfor %}
                             </ul>
@@ -39,13 +39,70 @@
                         <div class="row-lg no-gutters" style="margin: 10px">
                             <div id="1">
                                 <div class="container information-found">
-                                    <h3>Information Found</h3>
-                                    <p>{{context.results.description}}</p>
-                                    <ul>
+
+
+                                    <hr>
+                                    <h5 style="font-weight: bold; text-align: center">Key Information</h5>
+                                    <br>
+                                    <p style="text-align: center">{{context.results.description}}</p>
+                                    <ul style="text-align: center;">
+                                        {% for detail in context.combiData.overview %}
+                                        <li>{{detail}}</li>
+                                        {% endfor %}
+                                    </ul>
+                                    <ul style="text-align: center;">
                                         {% for i in context.topics %}
                                         <li>{{i}}</li>
                                         {% endfor %}
                                     </ul>
+
+
+                                    <hr>
+                                    <h5 style="font-weight: bold; text-align: center">Features</h5>
+                                    <ul>
+                                        {% for feature in context.saasData.features %}
+                                        <li>{{feature}}</li>
+                                        {% endfor %}
+                                    </ul>
+
+
+                                    <hr>
+                                    <h5 style="font-weight: bold; text-align: center">Pricing Options</h5>
+                                    <ul>
+                                        {% for x,y in context.saasData.pricing.items %}
+                                        <!-- style=" display:inline; padding: 20px; font-weight: bold"-->
+                                        <li>{{x}} : {{y}}</li>
+                                        {% endfor %}
+                                    </ul>
+                                    <hr>
+                                    <h5 style="font-weight: bold; text-align: center">Social Media information</h5>
+                                    <ul>
+                                        {% for x,y in context.saasData.social_media.items %}
+                                        <li>{{x}} : {{y}}</li>
+                                        {% endfor %}
+                                    </ul>
+                                    <hr>
+                                    <h5 style="font-weight: bold; text-align: center">More Info</h5>
+                                    <ul class="wrapper">
+                                        <li>{{context.saasData.tech_details.3.1}}</li>
+                                        <li>{{context.saasData.tech_details.4.1}}</li>
+                                    </ul>
+
+                                    <hr>
+                                    <h5 style="font-weight: bold; text-align: center">Competitor Analysis</h5>
+                                    <!-- Last thing to do before commit context.captData. -->
+                                    <hr>
+                                    <h5 style="font-weight: bold; text-align: center">Positions Available</h5>
+                                   {% for info in context.combiData.jobs %}
+                                    <div style="text-align: center">
+                                        <hr>
+                                        <h6 style="font-weight: bold; text-align: center">{{info.position}}</h6>
+                                        <p>Location: {{info.location}}</p>
+                                        <p>Experience Required: {{info.experience}}</p>
+                                        <p>Salary Offered: {{info.salary}}</p>
+                                        <p>Equity Offered: {{info.equity}}</p>
+                                    </div>
+                                    {% endfor %}
                                 </div>
                             </div>
                             <div id="2" style="display:none;">
@@ -87,9 +144,6 @@
                                     </div>
                                     <div >
                                         <canvas id="myChartLine"></canvas>
-                                    </div>
-                                    <div>
-                                        <canvas id="myChartPie"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -291,122 +345,6 @@
       });
   }
 
-  function drawPieGraph(data, id) {
-      var labels = data.labels;
-      var chartLabel = data.chartLabel;
-      var chartData = data.chartData;
-      var ctx = document.getElementById(id).getContext('2d');
-      console.log(chartLabel)
-      console.log(chartData)
-      console.log(labels)
-      var myChart = new Chart(ctx, {
-          type: 'pie',
-          data: {
-              labels: labels,
-              datasets: [{
-                  label: chartLabel,
-                  data: chartData,
-                  backgroundColor: [
-                      'rgba(255, 99, 132, 0.2)',
-                      'rgba(54, 162, 235, 0.2)',
-                      'rgba(255, 206, 86, 0.2)',
-                      'rgba(75, 192, 192, 0.2)',
-                      'rgba(153, 102, 255, 0.2)',
-                      'rgba(255, 159, 64, 0.2)',
-                      'rgba(255, 99, 132, 0.2)',
-                      'rgba(54, 162, 235, 0.2)',
-                      'rgba(255, 206, 86, 0.2)',
-                      'rgba(75, 192, 192, 0.2)',
-                      'rgba(153, 102, 255, 0.2)',
-                      'rgba(255, 159, 64, 0.2)',
-                      'rgba(255, 99, 132, 0.2)',
-                      'rgba(54, 162, 235, 0.2)',
-                      'rgba(255, 206, 86, 0.2)',
-                      'rgba(75, 192, 192, 0.2)',
-                      'rgba(153, 102, 255, 0.2)',
-                      'rgba(255, 159, 64, 0.2)',
-                      'rgba(255, 99, 132, 0.2)',
-                      'rgba(54, 162, 235, 0.2)',
-                      'rgba(255, 99, 132, 0.2)',
-                      'rgba(54, 162, 235, 0.2)',
-                      'rgba(255, 206, 86, 0.2)',
-                      'rgba(75, 192, 192, 0.2)',
-                      'rgba(153, 102, 255, 0.2)',
-                      'rgba(255, 159, 64, 0.2)',
-                      'rgba(255, 99, 132, 0.2)',
-                      'rgba(54, 162, 235, 0.2)',
-                      'rgba(255, 206, 86, 0.2)',
-                      'rgba(75, 192, 192, 0.2)',
-                      'rgba(153, 102, 255, 0.2)',
-                      'rgba(255, 159, 64, 0.2)',
-                      'rgba(255, 99, 132, 0.2)',
-                      'rgba(54, 162, 235, 0.2)',
-                      'rgba(255, 206, 86, 0.2)',
-                      'rgba(75, 192, 192, 0.2)',
-                      'rgba(153, 102, 255, 0.2)',
-                      'rgba(255, 159, 64, 0.2)',
-                      'rgba(255, 99, 132, 0.2)',
-                      'rgba(54, 162, 235, 0.2)'
-                  ],
-                  borderColor: [
-                      'rgba(255, 99, 132, 1)',
-                      'rgba(54, 162, 235, 1)',
-                      'rgba(255, 206, 86, 1)',
-                      'rgba(75, 192, 192, 1)',
-                      'rgba(153, 102, 255, 1)',
-                      'rgba(255, 159, 64, 1)',
-                      'rgba(255, 99, 132, 1)',
-                      'rgba(54, 162, 235, 1)',
-                      'rgba(255, 206, 86, 1)',
-                      'rgba(75, 192, 192, 1)',
-                      'rgba(153, 102, 255, 1)',
-                      'rgba(255, 159, 64, 1)',
-                      'rgba(255, 99, 132, 1)',
-                      'rgba(54, 162, 235, 1)',
-                      'rgba(255, 206, 86, 1)',
-                      'rgba(75, 192, 192, 1)',
-                      'rgba(153, 102, 255, 1)',
-                      'rgba(255, 159, 64, 1)',
-                      'rgba(255, 99, 132, 1)',
-                      'rgba(54, 162, 235, 1)',
-                      'rgba(255, 99, 132, 1)',
-                      'rgba(54, 162, 235, 1)',
-                      'rgba(255, 206, 86, 1)',
-                      'rgba(75, 192, 192, 1)',
-                      'rgba(153, 102, 255, 1)',
-                      'rgba(255, 159, 64, 1)',
-                      'rgba(255, 99, 132, 1)',
-                      'rgba(54, 162, 235, 1)',
-                      'rgba(255, 206, 86, 1)',
-                      'rgba(75, 192, 192, 1)',
-                      'rgba(153, 102, 255, 1)',
-                      'rgba(255, 159, 64, 1)',
-                      'rgba(255, 99, 132, 1)',
-                      'rgba(54, 162, 235, 1)',
-                      'rgba(255, 206, 86, 1)',
-                      'rgba(75, 192, 192, 1)',
-                      'rgba(153, 102, 255, 1)',
-                      'rgba(255, 159, 64, 1)',
-                      'rgba(255, 99, 132, 1)',
-                      'rgba(54, 162, 235, 1)'
-                  ],
-                  borderWidth: 1
-              }]
-          },
-          options: {
-              responsive: true,
-              plugins: {
-                  legend: {
-                      position: 'top',
-                  },
-                  title: {
-                      display: true,
-                      text: 'Chart.js Pie Chart'
-                  }
-              }
-          },
-      });
-  }
 
 
 

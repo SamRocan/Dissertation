@@ -113,6 +113,7 @@ ul{
 ul li{
     padding: 10px 0px;
 }
+
 #right{
     border-radius: 5px;
     padding: 0;
@@ -188,6 +189,11 @@ ul li{
     margin-left: 5px;
     width: 90px;
     height: 90px;
+}
+.news_link li a {
+    color: black;
+    font-weight: bold;
+    text-decoration: none; /* no underline */
 }
 
 @media only screen and (max-width: 768px){

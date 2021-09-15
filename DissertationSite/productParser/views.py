@@ -15,6 +15,8 @@ import pandas as pd
 import time
 import re
 import os
+import requests
+from urllib.request import Request, urlopen
 
 
 Names = []
@@ -88,8 +90,6 @@ def send(request):
     return render(request, 'productParser/results.html', {'zipList':zipList})
 
 def product(request, productName):
-
-
 
     API_URL = "https://api.producthunt.com/v2/api/graphql"
 
@@ -197,6 +197,9 @@ def product(request, productName):
         results[i] = str(jsonInfo['data']['post'][i])
     print(results.get('tagline'))
 
+    """Paring Other Websites"""
+    companyName = str(results.get('name'))
+
     socialMediaZip = zip(Names,TwitterHandles, phUrls, profilePics)
 
     product_name = slug.capitalize()
@@ -208,6 +211,7 @@ def product(request, productName):
     #Get News
     newsHeadlines = []
     newsLink = []
+    """
     url = "https://bing-news-search1.p.rapidapi.com/news/search"
 
     newsQuery = str(topics[0])
@@ -228,7 +232,7 @@ def product(request, productName):
             newsHeadlines.append(i['name'])
             newsLink.append(i['url'])
             newsCount+=1
-
+"""
     newsZip = zip(newsLink,newsHeadlines)
     ####################
     searchStat = StatistaSearcher()
@@ -239,20 +243,47 @@ def product(request, productName):
     getLinks = searchStat.getLinks(statRes)
     print(getLinks)
 
-    statGraph = StatistaGraph(getLinks[0])
+    if(len(getLinks) == 0):
+        statLabels = []
+        chartLabel = ""
+        chartData = []
+    else:
+        statGraph = StatistaGraph(getLinks[0])
 
-    graphInfo = statGraph.getInfo()
-    chartLabel = graphInfo[0]
-    statLabels = graphInfo[1]
-    statLabels.reverse()
-    chartData = graphInfo[2]
-    chartData.reverse()
+        graphInfo = statGraph.getInfo()
+        chartLabel = graphInfo[0]
+        statLabels = graphInfo[1]
+        statLabels.reverse()
+        chartData = graphInfo[2]
+        chartData.reverse()
     statData ={
         "labels":statLabels,
         "chartLabel":chartLabel,
         "chartData":chartData,
     }
+
     jsonData = dumps(statData)
+    combi = YCombinatorInfo(companyName)
+    combiData = {
+        'founders':combi.getFounders(),
+        'jobs':combi.getJobsHiring(),
+        'overview':combi.getOverview(),
+    }
+    print("---- YCOMBINATOR ----")
+    print(combiData)
+    print("---- Capterra ----")
+    cap = CapterraInfo(companyName)
+    captData = cap.competitorComparison()
+    print("---- Saasworth ----")
+    saas = SaasworthyInfo(companyName)
+    saasData = {
+        'pricing':saas.getPricingInfo(),
+        'score':saas.getSWScore(),
+        'features':saas.getFeatures(),
+        'tech_details':saas.getTechDetails(),
+        'social_media':saas.getSocialMediaInfo()
+    }
+
 
     context = {
         'data':jsonData,
@@ -263,6 +294,9 @@ def product(request, productName):
         'socialMediaZip':socialMediaZip,
         'newsZip':newsZip,
         'twitterHandles':TwitterHandles,
+        'combiData':combiData,
+        'captData':captData,
+        'saasData':saasData
     }
 
     return render(request, 'productParser/product.html', {"context":context})
@@ -356,6 +390,8 @@ def analysis(request, userName, self=None):
 
 def noTwitter(request):
     return render(request, 'productParser/noTwitter.html')
+
+# Classes
 
 class LIWCAnalysis:
 
@@ -732,3 +768,290 @@ class StatistaSearcher:
 
         return(basicStatPage)
 
+class CapterraInfo:
+    headers = {"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit537.36 (KHTML, like Gecko) Chrome","Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"}
+
+    def __init__(self, query):
+        self.newQ = '+'.join(query.split())
+        newQ = '+'.join(query.split())
+        capterraQ = '-'.join(query.split())
+        capterraQ = capterraQ.lower()
+        q = "capterra+"+newQ
+        url = 'https://www.google.com/search?q=' + q + '&ie=utf-8&oe=utf-8'
+        request = Request(url,headers=self.headers)
+        try:
+            page = urlopen(request)
+            soup = BeautifulSoup(page, features="lxml")
+            links = soup.findAll('a')
+            retStr = None
+            done = False
+            for i in links:
+                if("/url?q" in str(i) and "google" not in str(i) ):
+                    if(("capterra" in str(i)) and (capterraQ in str(i)) and done==False):
+                        retStr = ""
+                        for z in str(i["href"])[7:]:
+                            if(z=='&'):
+                                done=True
+                            if(done==False):
+                                retStr+=z
+
+            if(retStr == None):
+                self.soup = None
+            else:
+                page = requests.get(retStr)
+                self.soup = BeautifulSoup(page.content, 'html.parser')
+        except:
+            self.soup = None
+    def competitorComparison(self):
+        if(self.soup == None):
+            return []
+        section = self.soup.findAll(class_="row flex-nowrap flex-row-4 flex-row-xl-5")
+        if(section != None):
+            companyComparison = {}
+            headers = []
+            for i in range(len(section)):
+                category = []
+                headCount = 0
+                for q in section[i]:
+                    for p in q:
+                        if("N/A" in str(p)):
+                            category.append(p.strip())
+                        if('Tag' in str(type(p))) and ( len(p.text) != 0):
+                            if(i!=0):
+                                category.append(p.text.strip())
+                            elif(headCount%4 ==0):
+                                headers.append(p.text.strip())
+                            headCount+=1
+                if(len(category)>0):
+                    finalList = []
+                    for x in range(len(category)):
+                        if(x!=0 and (category[x] != category[0])):
+                            finalList.append(category[x])
+                    companyComparison[category[0]] = finalList
+            companyComparison["Name"] = headers
+            return companyComparison
+        else:
+            return None
+
+class SaasworthyInfo:
+    headers = {"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit537.36 (KHTML, like Gecko) Chrome","Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"}
+
+    def __init__(self, q):
+        newQ = '+'.join(q.split())
+        saasQ = '-'.join(q.split())
+        saasQ = saasQ.lower()
+        newQ = "saasworthy+"+newQ
+        url = 'https://www.google.com/search?q=' + newQ + '&ie=utf-8&oe=utf-8'
+        request = Request(url,headers=self.headers)
+        try:
+            page = urlopen(request)
+            soup = BeautifulSoup(page, features="lxml")
+            links = soup.findAll('a')
+            retStr = None
+            done=False
+            for i in links:
+                if("/url?q" in str(i) and "google" not in str(i) ):
+                    if(("saasworthy" in str(i)) and (saasQ in str(i)) and done==False):
+                        retStr = ""
+                        for z in str(i["href"])[7:]:
+                            if(z=='&'):
+                                done=True
+                            if(done==False):
+                                retStr+=z
+            if(retStr == None):
+                self.soup = None
+            else:
+                page = requests.get(retStr)
+                self.soup = BeautifulSoup(page.content, 'html.parser')
+        except:
+            self.soup = None
+
+    def getPricingInfo(self):
+        if(self.soup == None):
+            return []
+        prices = self.soup.findAll('span', {'class': 'pln-price'})
+        titles = self.soup.findAll('span', {'class': 'plan-title'})
+
+        altPrices = []
+        titlesList =  []
+        mainPrices = {}
+        for i in titles:
+            if ("Free" in i.text):
+                altPrices.append(str(i.text.strip()))
+            else:
+                titlesList.append(str(i.text.strip()))
+
+        for i in range(len(prices)):
+            #print(titlesList[i] + ": " + str(prices[i].text.strip()))
+            mainPrices[titlesList[i]] = str(prices[i].text.strip())
+        for i in range(len(prices), len(titles)-len(altPrices)):
+            altPrices.append(titlesList[i])
+            mainPrices[titlesList[i]] = titlesList[i]
+
+        #print("\n")
+
+        #print("Other Options")
+        #for i in altPrices:
+        #print(i)
+        return mainPrices
+
+    def getFeatures(self):
+        if(self.soup == None):
+            return []
+        features = self.soup.find(class_="feture_list")
+        if(features != None):
+            items = features.findAll('li')
+            retFeatures = []
+            for i in items:
+                if('fa-check' in str(i)):
+                    retFeatures.append(i.text)
+            return retFeatures
+        return []
+
+    def getSWScore(self):
+        if(self.soup == None):
+            return []
+        score = self.soup.find(class_="pop_score_d")
+        if(score != None):
+            return score.text.strip()[0:3]
+        else:
+            return []
+
+    def getSocialMediaInfo(self):
+        if(self.soup == None):
+            return []
+        social_media_followers = self.soup.findAll(class_="flwrs-row")
+
+        socialMediaFollowers = {}
+        for i in social_media_followers:
+            if("twitter" in str(i)):
+                print("Twitter Followers: " + str(i.text.strip()))
+                socialMediaFollowers['Twitter'] = str(i.text.strip())
+            if("linkedin" in str(i)):
+                print("LinkedIn Followers: " + str(i.text.strip()))
+                socialMediaFollowers['LinkedIn'] = str(i.text.strip())
+            if("facebook" in str(i)):
+                print("Facebook Followers: " + str(i.text.strip()))
+                socialMediaFollowers['Facebook'] = str(i.text.strip())
+            if("instagram" in str(i)):
+                print("Instagram Followers: " + str(i.text.strip()))
+                socialMediaFollowers['Instagram'] = str(i.text.strip())
+            if("youtube" in str(i)):
+                print("Youtube Followers: " + str(i.text.strip()))
+                socialMediaFollowers['Youtube'] = str(i.text.strip())
+        return socialMediaFollowers
+
+    #https://stackoverflow.com/questions/23377533/python-beautifulsoup-parsing-table
+    #Re do this method to amend the API array, the you're done.
+    def getTechDetails(self):
+        if(self.soup == None):
+            return []
+        data = []
+        table = self.soup.find('table', attrs={'class':'tech-det-table'})
+        if(table!= None):
+            rows = table.find_all('tr')
+            for row in rows:
+                cols = row.find_all('td')
+                cols = [ele.text.strip() for ele in cols]
+                data.append([ele for ele in cols if ele])
+
+            dataTidy = []
+            for i in data:
+                count=0
+                tabInfo = []
+                for z in range(len(i)):
+                    text = i[z].replace("\n", ", ")
+                    count+=1
+                    tabInfo.append(text)#(i[z])
+                    if(count%2==0):
+                        dataTidy.append(tabInfo)
+                        tabInfo = []
+            return dataTidy
+        return []
+
+class YCombinatorInfo:
+    headers = {"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit537.36 (KHTML, like Gecko) Chrome","Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"}
+
+    def __init__(self, q):
+        newQ = '+'.join(q.split())
+        yCombq = '-'.join(q.split())
+        yCombq = yCombq.lower()
+        q = "ycombinator-"+newQ
+        url = 'https://www.google.com/search?q=' + q + '&ie=utf-8&oe=utf-8'
+        request = Request(url,headers=self.headers)
+        try:
+            page = urlopen(request)
+            soup = BeautifulSoup(page, features="lxml")
+            links = soup.findAll('a')
+            done=False
+            retStr = None
+            for i in links:
+                if("/url?q" in str(i) and "google" not in str(i) and "jobs" not in str(i)):
+                    if(("ycombinator" in str(i)) and (yCombq in str(i))  and done==False):
+                        retStr = ""
+                        for z in str(i["href"])[7:]:
+                            if(z=='&'):
+                                done=True
+                            if(done==False):
+                                retStr+=z
+            if(retStr == None):
+                self.soup = None
+            else:
+                page = requests.get(retStr)
+                self.soup = BeautifulSoup(page.content, 'html.parser')
+        except:
+            self.soup = None
+
+    def getOverview(self):
+        if(self.soup == None):
+            return []
+        res = self.soup.find(class_="facts")
+        if(res!= None):
+            divs = res.findAll("div")
+
+            retOverview = []
+            for i in divs:
+                retOverview.append(i.text.strip())
+            return retOverview
+        else:
+            return []
+
+    def getFounders(self):
+        if(self.soup == None):
+            return []
+        res = self.soup.findAll(class_="founder-card")
+        if(res!= None):
+            names = []
+            for i in res:
+                name = i.find(class_="font-bold")
+                name = name.text
+                names.append(name)
+
+            return names
+        else:
+            return []
+
+    def getJobsHiring(self):
+        if(self.soup == None):
+            return []
+        jobs = []
+        res = self.soup.findAll(class_="job-heading")
+        if(res != None):
+            for i in res:
+                job = {}
+                title = i.find(class_="job-title")
+                job['position'] = title.text
+                dets = i.findAll(class_="job-detail")
+                for z in range(len(dets)):
+                    if(z == 0):
+                        job['location'] = dets[z].text
+                    if('year' in dets[z].text):
+                        job['experience'] = dets[z].text
+                    if(('£' or '$' or '€') in dets[z].text):
+                        job['salary'] = dets[z].text
+                    if('%' in dets[z].text):
+                        job['equity'] = dets[z].text
+                jobs.append(job)
+            return jobs
+        else:
+            return []

@@ -1,16 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "productParser/base.html" %}
+{% load static %}
+{% block content %}
 <h2>No Twitter Account found for the user</h2>
 <a href="javascript:close_window();"> close window</a>
-</body>
 <script>
     function close_window() {
             close();
     }
 </script>
-</html>
+{% endblock content %}
